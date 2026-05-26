@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>IR Downloader</title>
+</head>
+<body>
+
+<h2>Downloader</h2>
+
+<input id="url" placeholder="Paste URL">
+<button onclick="send()">Download</button>
+
+<p id="status"></p>
+
+<script>
+async function send() {
+
+  const url = document.getElementById("url").value
+
+  const issue = {
+    title: "DOWNLOAD",
+    body: url
+  }
+
+  const res = await fetch(
+    "https://api.github.com/repos/USERNAME/REPO/issues",
+    {
+      method: "POST",
+      headers: {
+        "Accept": "application/vnd.github+json",
+        "Authorization": "Bearer GITHUB_TOKEN"
+      },
+      body: JSON.stringify(issue)
+    }
+  )
+
+  if (res.ok) {
+    document.getElementById("status").innerText =
+      "Download started"
+  } else {
+    document.getElementById("status").innerText =
+      "Error"
+  }
+}
+</script>
+
+</body>
+</html>
