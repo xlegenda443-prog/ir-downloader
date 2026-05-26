@@ -1,0 +1,36 @@
+name: Downloader
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  download:
+
+    if: contains(github.event.issue.title, 'DOWNLOAD')
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Read URL
+      run: |
+        echo "${{ github.event.issue.body }}" > url.txt
+
+    - name: Install yt-dlp
+      run: |
+        pip install yt-dlp
+
+    - name: Download
+      run: |
+        URL=$(cat url.txt)
+        yt-dlp "$URL" -o output.mp4
+
+    - name: Upload
+      uses: actions/upload-artifact@v4
+      with:
+        name: downloaded-file
+        path: output.mp4
